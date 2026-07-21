@@ -30,6 +30,7 @@ Reference of Clutch-Performance by Pascal Bauer*, Luis K. H. Holzhauer, and Jan 
 ```
 .
 ├── tennis_analysis.py     # full pipeline: Phases 1–6
+├── clutch_style_check.py  # does clutch just track playing strength? (robustness)
 ├── atp_panel.csv          # derived match-level panel (used by Phase 5)
 ├── wta_panel.csv          # derived match-level panel (used by Phase 5)
 ├── tennis_atp/            # raw ATP match CSVs (Jeff Sackmann)
@@ -92,6 +93,20 @@ more so for men:
 
 Significant but shallow slope → clutch is a **real but small and largely
 non-repeatable** effect.
+
+**Robustness — does "clutch" just re-measure playing strength?** The clutch score
+correlates with career point win percentage (*r* ≈ 0.38 on both tours), so early and
+late clutch share a stable skill component. Controlling for career serve/return rates
+(`clutch_style_check.py`):
+
+| Tour | β raw | β controlling for strength | verdict |
+|------|:-----:|:--------------------------:|---------|
+| ATP  | 0.394 | **0.315** (*p* < 0.001)    | persists — 20% of the raw slope was strength |
+| WTA  | 0.221 | **0.075** (*p* = 0.23)     | **not significant** — 66% was strength |
+
+So the men's persistence survives, the women's does not. Reproduce in seconds with
+`python3 clutch_style_check.py` (reads the committed Phase 5 output — no Monte-Carlo
+rerun needed). Written to `outputs/clutch_style_control.csv`.
 
 ## Figures (in `outputs/`)
 
