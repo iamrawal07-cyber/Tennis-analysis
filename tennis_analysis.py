@@ -263,7 +263,9 @@ TOP10_WTA = ["Justine Henin","Serena Williams","Iga Swiatek","Lindsay Davenport"
              "Simona Halep","Elena Rybakina"]
 
 fig, axes = plt.subplots(1, 2, figsize=(14, 6))
-fig.suptitle("Match win % predicted by point win % (Figures 1 & 2 of the paper)",
+# No figure number in the title: this plot is Figure 1 in the report, and an
+# embedded number that disagrees with the LaTeX caption looks like an error.
+fig.suptitle("Match win % predicted by point win %",
              fontsize=13, fontweight="bold")
 
 for ax, players_df, top10, title, r2_val, model_r1, data_r1 in [
@@ -650,8 +652,10 @@ print(f"  Figure 2 (all models) saved -> {OUTPUT_DIR / 'tennis_figure_all_models
 
 # Figure 3 (Phase 2): residuals of the linear model
 fig3, axes3 = plt.subplots(1, 2, figsize=(14, 6), facecolor='white')
+# This plot is Figure 2 in the report, so no embedded figure number here --
+# it previously read "Figure 3", contradicting the caption.
 fig3.suptitle(
-    'Figure 3 - Residuals of Linear Model\n'
+    'Residuals of the Linear Model\n'
     '(Positive = linear underestimates mwp, Negative = overestimates)',
     fontsize=13, fontweight='bold'
 )
@@ -1389,8 +1393,10 @@ for ax, (df, label, slope, intercept, p, r2, n, colour) in zip(
     ax.scatter(x, y, s=30, alpha=0.5, color=colour, linewidths=0)
 
     x_line = np.linspace(x.min(), x.max(), 100)
+    # "p = 0.000" is never true; report a bound instead.
+    p_txt = "p < 0.001" if p < 0.001 else f"p = {p:.3f}"
     ax.plot(x_line, slope * x_line + intercept, color="black", lw=2,
-            label=f"beta = {slope:.3f}, p = {p:.3f}")
+            label=f"beta = {slope:.3f}, {p_txt}")
 
     lims = [min(x.min(), y.min()) - 1, max(x.max(), y.max()) + 1]
     ax.plot(lims, lims, "k--", alpha=0.3, lw=1, label="y = x")
